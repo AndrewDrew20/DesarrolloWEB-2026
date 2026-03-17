@@ -1,23 +1,26 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
-import { useAuth } from "../context/AuthContext";
+import { useAuth0 } from "@auth0/auth0-react";
 import "./Checkout.css";
 
 export default function Checkout() {
   const { items, totalPrice, clearCart } = useCart();
-  const { currentUser } = useAuth();
+  const { user, isAuthenticated, isLoading } = useAuth0();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
-    fullName: currentUser?.name || "",
-    email: currentUser?.email || "",
+    fullName: user?.name || "",
+    email: user?.email || "",
     address: "",
     city: "",
     province: "",
     phone: "",
     paymentMethod: "card",
   });
+
+  if (isLoading) return null;
+  if (!isAuthenticated) return <Navigate to="/" replace />;
 
   function formatPrice(price) {
     return "₡" + price.toLocaleString("es-CR");
@@ -39,7 +42,6 @@ export default function Checkout() {
         <h1>Finalizar compra</h1>
 
         <div className="checkout-layout">
-          {/* Form */}
           <form className="checkout-form" onSubmit={handleSubmit}>
             <section className="form-section">
               <h2>Información de envío</h2>
@@ -159,7 +161,6 @@ export default function Checkout() {
             </button>
           </form>
 
-          {/* Order summary */}
           <aside className="checkout-summary">
             <h2>Tu pedido</h2>
             <div className="checkout-items">

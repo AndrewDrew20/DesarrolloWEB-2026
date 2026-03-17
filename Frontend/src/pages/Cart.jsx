@@ -1,11 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
-import { useAuth } from "../context/AuthContext";
+import { useAuth0 } from "@auth0/auth0-react";
 import "./Cart.css";
 
 export default function Cart() {
   const { items, removeFromCart, updateQuantity, totalPrice, clearCart } = useCart();
-  const { currentUser } = useAuth();
+  const { isAuthenticated, loginWithRedirect } = useAuth0();
   const navigate = useNavigate();
 
   function formatPrice(price) {
@@ -13,8 +13,8 @@ export default function Cart() {
   }
 
   function handleCheckout() {
-    if (!currentUser) {
-      navigate("/login");
+    if (!isAuthenticated) {
+      loginWithRedirect();
     } else {
       navigate("/checkout");
     }
@@ -39,7 +39,6 @@ export default function Cart() {
         <h1>Carrito de compras</h1>
 
         <div className="cart-layout">
-          {/* Items */}
           <div className="cart-items">
             {items.map(({ product, quantity }) => (
               <div key={product._id} className="cart-item">
@@ -73,7 +72,6 @@ export default function Cart() {
             </button>
           </div>
 
-          {/* Summary */}
           <div className="cart-summary">
             <h2>Resumen</h2>
             <div className="summary-row">
@@ -89,7 +87,7 @@ export default function Cart() {
               <span>{formatPrice(totalPrice)}</span>
             </div>
             <button className="btn-checkout" onClick={handleCheckout}>
-              {currentUser ? "Proceder al pago" : "Iniciar sesión para comprar"}
+              {isAuthenticated ? "Proceder al pago" : "Iniciar sesión para comprar"}
             </button>
             <Link to="/catalog" className="continue-shopping">
               ← Seguir comprando

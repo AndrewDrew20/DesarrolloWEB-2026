@@ -1,12 +1,15 @@
 import { NavLink, Outlet, Navigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth0 } from "@auth0/auth0-react";
+import { useUserRole } from "../../hooks/useUserRole";
 import "./AdminLayout.css";
 
 export default function AdminLayout() {
-  const { currentUser } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth0();
+  const role = useUserRole();
 
-  if (!currentUser) return <Navigate to="/login" replace />;
-  if (currentUser.role !== "admin") return <Navigate to="/" replace />;
+  if (isLoading) return null;
+  if (!isAuthenticated) return <Navigate to="/" replace />;
+  if (role && role !== "admin") return <Navigate to="/" replace />;
 
   return (
     <div className="admin-layout">

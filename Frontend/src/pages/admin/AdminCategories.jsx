@@ -1,12 +1,17 @@
-import { useState } from "react";
-import { mockCategories as initialCategories } from "../../data/mockCategories";
+import { useState, useEffect } from "react";
 import "./AdminTable.css";
 
+const BASE_URL = 'http://localhost:3000';
+
 export default function AdminCategories() {
-  const [categories, setCategories] = useState(initialCategories);
+  const [categories, setCategories] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState({ name: "", description: "" });
+
+  useEffect(() => {
+    fetch(`${BASE_URL}/categories`).then(r => r.json()).then(setCategories).catch(console.error);
+  }, []);
 
   function openAdd() {
     setEditing(null);
@@ -20,22 +25,33 @@ export default function AdminCategories() {
     setShowForm(true);
   }
 
-  function handleDelete(id) {
+  async function handleDelete(id) {
     if (window.confirm("¿Eliminar esta categoría?")) {
-      setCategories((prev) => prev.filter((c) => c._id !== id));
+      await fetch(`${BASE_URL}/categories/${id}`, { method: 'DELETE' });
+      setCategories(prev => prev.filter(c => c._id !== id));
     }
   }
 
   function handleChange(e) {
-    setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+    setForm(f => ({ ...f, [e.target.name]: e.target.value }));
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     if (editing) {
-      setCategories((prev) => prev.map((c) => (c._id === editing ? { ...c, ...form } : c)));
+      const updated = await fetch(`${BASE_URL}/categories/${editing}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form)
+      }).then(r => r.json());
+      setCategories(prev => prev.map(c => c._id === editing ? updated : c));
     } else {
-      setCategories((prev) => [...prev, { ...form, _id: "cat" + Date.now() }]);
+      const created = await fetch(`${BASE_URL}/categories`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form)
+      }).then(r => r.json());
+      setCategories(prev => [...prev, created]);
     }
     setShowForm(false);
   }
@@ -50,14 +66,10 @@ export default function AdminCategories() {
       <div className="admin-table-wrap">
         <table className="admin-table">
           <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Descripción</th>
-              <th>Acciones</th>
-            </tr>
+            <tr><th>Nombre</th><th>Descripción</th><th>Acciones</th></tr>
           </thead>
           <tbody>
-            {categories.map((c) => (
+            {categories.map(c => (
               <tr key={c._id}>
                 <td><strong>{c.name}</strong></td>
                 <td>{c.description}</td>
@@ -75,7 +87,7 @@ export default function AdminCategories() {
 
       {showForm && (
         <div className="modal-overlay" onClick={() => setShowForm(false)}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
+          <div className="modal" onClick={e => e.stopPropagation()}>
             <h2>{editing ? "Editar categoría" : "Agregar categoría"}</h2>
             <form onSubmit={handleSubmit} className="admin-form">
               <label>Nombre<input name="name" value={form.name} onChange={handleChange} required /></label>

@@ -1,14 +1,20 @@
-import { useState } from "react";
-import { mockProducts as initialProducts } from "../../data/mockProducts";
-import { mockCategories } from "../../data/mockCategories";
+import { useState, useEffect } from "react";
+import { useApi } from "../../hooks/useApi";
 import "./AdminTable.css";
 
 export default function AdminProducts() {
-  const [products, setProducts] = useState(initialProducts);
+  const { authFetch } = useApi();
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState({ name: "", id_category: "", description: "", price: "", stock: "", rating: 3, imageUrl: "" });
   const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    authFetch('/products').then(setProducts).catch(console.error);
+    fetch('http://localhost:3000/categories').then(r => r.json()).then(setCategories).catch(console.error);
+  }, []);
 
   function formatPrice(price) {
     return "₡" + Number(price).toLocaleString("es-CR");
@@ -26,32 +32,31 @@ export default function AdminProducts() {
     setShowForm(true);
   }
 
-  function handleDelete(id) {
+  async function handleDelete(id) {
     if (window.confirm("¿Eliminar este producto?")) {
-      setProducts((prev) => prev.filter((p) => p._id !== id));
+      await authFetch(`/products/${id}`, { method: 'DELETE' });
+      setProducts(prev => prev.filter(p => p._id !== id));
     }
   }
 
   function handleChange(e) {
-    setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+    setForm(f => ({ ...f, [e.target.name]: e.target.value }));
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
+    const body = { ...form, price: Number(form.price), stock: Number(form.stock), rating: Number(form.rating) };
     if (editing) {
-      setProducts((prev) =>
-        prev.map((p) => (p._id === editing ? { ...p, ...form, price: Number(form.price), stock: Number(form.stock), rating: Number(form.rating) } : p))
-      );
+      const updated = await authFetch(`/products/${editing}`, { method: 'PATCH', body: JSON.stringify(body) });
+      setProducts(prev => prev.map(p => p._id === editing ? updated : p));
     } else {
-      const newProduct = { ...form, _id: "prod" + Date.now(), price: Number(form.price), stock: Number(form.stock), rating: Number(form.rating) };
-      setProducts((prev) => [...prev, newProduct]);
+      const created = await authFetch('/products', { method: 'POST', body: JSON.stringify(body) });
+      setProducts(prev => [...prev, created]);
     }
     setShowForm(false);
   }
 
-  const filtered = products.filter((p) =>
-    p.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = products.filter(p => p.name?.toLowerCase().includes(search.toLowerCase()));
 
   return (
     <div className="admin-section">
@@ -60,24 +65,18 @@ export default function AdminProducts() {
         <button className="btn-admin-add" onClick={openAdd}>+ Agregar producto</button>
       </div>
 
-      <input className="admin-search" placeholder="Buscar producto..." value={search} onChange={(e) => setSearch(e.target.value)} />
+      <input className="admin-search" placeholder="Buscar producto..." value={search} onChange={e => setSearch(e.target.value)} />
 
       <div className="admin-table-wrap">
         <table className="admin-table">
           <thead>
             <tr>
-              <th>Imagen</th>
-              <th>Nombre</th>
-              <th>Categoría</th>
-              <th>Precio</th>
-              <th>Stock</th>
-              <th>Rating</th>
-              <th>Acciones</th>
+              <th>Imagen</th><th>Nombre</th><th>Categoría</th><th>Precio</th><th>Stock</th><th>Rating</th><th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            {filtered.map((p) => {
-              const cat = mockCategories.find((c) => c._id === p.id_category);
+            {filtered.map(p => {
+              const cat = categories.find(c => c._id === p.id_category);
               return (
                 <tr key={p._id}>
                   <td><img src={p.imageUrl} alt={p.name} style={{ width: 60, height: 45, objectFit: "cover", borderRadius: 5 }} /></td>
@@ -99,17 +98,16 @@ export default function AdminProducts() {
         </table>
       </div>
 
-      {/* Modal form */}
       {showForm && (
         <div className="modal-overlay" onClick={() => setShowForm(false)}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
+          <div className="modal" onClick={e => e.stopPropagation()}>
             <h2>{editing ? "Editar producto" : "Agregar producto"}</h2>
             <form onSubmit={handleSubmit} className="admin-form">
               <label>Nombre<input name="name" value={form.name} onChange={handleChange} required /></label>
               <label>Categoría
                 <select name="id_category" value={form.id_category} onChange={handleChange} required>
                   <option value="">Seleccionar...</option>
-                  {mockCategories.map((c) => <option key={c._id} value={c._id}>{c.name}</option>)}
+                  {categories.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
                 </select>
               </label>
               <label>Descripción<textarea name="description" value={form.description} onChange={handleChange} required rows={3} /></label>

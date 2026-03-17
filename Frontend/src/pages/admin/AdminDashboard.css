@@ -1,0 +1,205 @@
+.admin-dashboard h1 {
+  font-size: 1.6rem;
+  color: #1a1a2e;
+  margin-bottom: 0.25rem;
+}
+
+.dash-subtitle {
+  color: #888;
+  font-size: 0.9rem;
+  margin-bottom: 1.75rem;
+}
+
+/* Stats grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.stat-card.highlight {
+  background: #1a1a2e;
+  color: #fff;
+}
+
+.stat-card.highlight .stat-label {
+  color: #aaa;
+}
+
+.stat-card.highlight .stat-link {
+  color: #e94560;
+}
+
+.stat-icon {
+  font-size: 1.8rem;
+}
+
+.stat-num {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0;
+}
+
+.stat-card.highlight .stat-num {
+  color: #fff;
+  font-size: 1.1rem;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: #888;
+  margin: 0;
+}
+
+.stat-link {
+  margin-left: auto;
+  color: #e94560;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Section */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.section-header h2 {
+  font-size: 1rem;
+  color: #1a1a2e;
+}
+
+.see-all {
+  color: #e94560;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* Table */
+.admin-table-wrap {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.admin-table th {
+  background: #f8f8f8;
+  color: #888;
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid #eee;
+}
+
+.admin-table td {
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid #f5f5f5;
+  color: #333;
+  vertical-align: middle;
+}
+
+.admin-table tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-table tr:hover td {
+  background: #fafafa;
+}
+
+.monospace {
+  font-family: monospace;
+  font-size: 0.82rem;
+  color: #888;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.status-pending  { background: #fff7e6; color: #a06000; }
+.status-shipped  { background: #e8f4ff; color: #1a5fa8; }
+.status-delivered { background: #e8fbe8; color: #1a6e2e; }
+
+/* Low stock */
+.low-stock h2 {
+  font-size: 1rem;
+  color: #1a1a2e;
+  margin-bottom: 0.75rem;
+}
+
+.low-stock-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+.low-stock-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.low-stock-item:last-child {
+  border-bottom: none;
+}
+
+.low-stock-item img {
+  width: 50px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.low-stock-item span {
+  flex: 1;
+  font-size: 0.88rem;
+}
+
+.stock-num {
+  font-weight: 700;
+  color: #e94560;
+  flex: 0 !important;
+  white-space: nowrap;
+}
+
+.recent-orders {
+  margin-bottom: 2rem;
+}

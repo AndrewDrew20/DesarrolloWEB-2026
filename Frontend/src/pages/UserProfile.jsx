@@ -33,18 +33,9 @@ export default function UserProfile() {
             <h1>{user.name}</h1>
             <p className="profile-email">{user.email}</p>
           </div>
-          <div className="profile-meta">
-            <div className="meta-item">
-              <span className="meta-label">Miembro desde</span>
-              <span className="meta-value">{formatDate(user.updated_at)}</span>
-            </div>
-          </div>
+    
         </div>
 
-        <section className="orders-section">
-          <h2>Historial de pedidos</h2>
-          <div className="no-orders">Aún no tienes pedidos registrados.</div>
-        </section>
       </div>
     </div>
   );

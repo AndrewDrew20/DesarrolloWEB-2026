@@ -1,11 +1,28 @@
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
-import { mockCategories } from "../data/mockCategories";
+import { useApi } from "../hooks/useApi";
+import { useEffect, useState } from "react";
 import "./ProductCard.css";
 
 export default function ProductCard({ product }) {
   const { addToCart } = useCart();
-  const category = mockCategories.find((c) => c._id === product.id_category);
+  const { getCategories } = useApi();
+  const [categoryName, setCategoryName] = useState("");
+
+  // Obtener nombre de la categoría
+  useEffect(() => {
+    const fetchCategory = async () => {
+      try {
+        const categories = await getCategories();
+        const cat = categories.find((c) => c._id === product.id_category);
+        if (cat) setCategoryName(cat.name);
+      } catch (err) {
+        console.error("Error fetching category:", err);
+      }
+    };
+
+    fetchCategory();
+  }, [product.id_category]);
 
   const stars = "★".repeat(product.rating) + "☆".repeat(5 - product.rating);
 
@@ -16,10 +33,15 @@ export default function ProductCard({ product }) {
   return (
     <div className="product-card">
       <Link to={`/catalog/${product._id}`}>
-        <img src={product.imageUrl} alt={product.name} className="product-card-img" />
+        <img 
+          src={product.imageUrl} 
+          alt={product.name} 
+          className="product-card-img"
+          loading="lazy"
+        />
       </Link>
       <div className="product-card-body">
-        <span className="product-card-category">{category?.name}</span>
+        <span className="product-card-category">{categoryName}</span>
         <Link to={`/catalog/${product._id}`} className="product-card-name">
           {product.name}
         </Link>

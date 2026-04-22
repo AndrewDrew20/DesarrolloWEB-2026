@@ -61,8 +61,8 @@ const categoryRouter = require('./routes/category');
 const rolRouter      = require('./routes/role');
 
 app.use('/users',     checkJwt, userRouter);
-app.use('/products',  checkJwt, productRouter);
 app.use('/purchases', checkJwt, purchaseRouter);
+app.use('/products', productRouter);
 app.use('/categories', categoryRouter);
 app.use('/roles',      rolRouter);
 

@@ -5,7 +5,7 @@ export default function Footer() {
     <footer className="footer">
       <div className="footer-inner">
         <div className="footer-brand">
-          <span>⚡ TechStore</span>
+          <span>SmartZone</span>
           <p>Tu tienda de tecnología de confianza en Costa Rica.</p>
         </div>
         <div className="footer-links">

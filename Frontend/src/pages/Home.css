@@ -51,7 +51,11 @@
 .values-section {
   padding: 3rem 0;
 }
-
+.section-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
 .category-section {
   background: #f8f8f8;
 }
@@ -125,10 +129,16 @@ h2 {
   background: #f8f8f8;
 }
 
-.values-grid {
+/* .values-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 2rem;
+} */
+ .values-grid {
+  display: grid;
+  grid-template-columns: repeat(4, max-content);
+  justify-content: center; 
+  gap: 3rem;
 }
 
 .value-item {

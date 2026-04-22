@@ -31,9 +31,6 @@ export default function OrderConfirmation() {
         </p>
 
         <div className="confirm-actions">
-          <Link to="/profile" className="btn-my-orders">
-            Ver mis pedidos
-          </Link>
           <Link to="/catalog" className="btn-continue">
             Seguir comprando
           </Link>

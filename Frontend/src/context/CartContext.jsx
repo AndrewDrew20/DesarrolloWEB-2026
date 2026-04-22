@@ -25,9 +25,9 @@ export function CartProvider({ children }) {
   // Generar clave de localStorage única por usuario
   const getCartStorageKey = () => {
     if (user?.sub) {
-      return `techstore_cart_${user.sub}`;
+      return `smartZone${user.sub}`;
     }
-    return "techstore_cart_anonymous";
+    return "smartZone_cart_anonymous";
   };
 
   // Cargar carrito desde localStorage al montar o cuando el usuario cambia
@@ -62,7 +62,7 @@ export function CartProvider({ children }) {
           localStorage.removeItem(storageKey);
         }
       } else {
-        // No hay carrito guardado para este usuario, empezar vacío
+        // Por si No hay carrito guardado para este usuario, empezar vacío
         setItems([]);
       }
     } catch (err) {

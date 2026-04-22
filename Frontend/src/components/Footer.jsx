@@ -29,7 +29,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="footer-bottom">
-        <p>© 2026 TechStore — ULACIT Desarrollo Web</p>
+        <p>© 2026 SmartZone — ULACIT Desarrollo Web</p>
       </div>
     </footer>
   );
